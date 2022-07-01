@@ -1,0 +1,48 @@
+mysql5.7.21通用二进制版
+wget https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+解压mysql5.7.21通用二进制版
+tar -zxvf mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+重命名为mysql将文件移动到/usr/local
+mv mysql-5.7.21-linux-glibc2.12-x86_64 mysql
+mv mysql  /usr/local
+主库配置
+[client]
+port=3306
+socket=/tmp/mysql.sock
+
+[mysqld1]
+user=mysql
+basedir=/usr/local/mysql
+datadir = /usr/local/mysql/data 
+socket = /tmp/mysql.sock1 
+port = 3306
+user = mysql 
+performance_schema = off 
+innodb_buffer_pool_size = 32M 
+bind_address = 0.0.0.0 
+skip-name-resolve = 0 
+log-bin=mysql-bin-master 
+server-id=1 
+binlog-do-db=HA
+binlog-ignore-db=mysql 
+从库配置
+[client]
+port=3306
+socket=/tmp/mysql.sock
+
+[mysqld]
+user=mysql
+basedir=/usr/local/mysql
+server_id=2
+datadir = /usr/local/mysql/data
+socket = /tmp/mysql.sock
+port = 3306
+user = mysql
+performance_schema = off
+innodb_buffer_pool_size = 32M
+bind_address = 0.0.0.0
+skip-name-resolve = 0
+
+初始化
+./mysqld --initialize --user=root --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data
+
